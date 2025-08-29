@@ -68,9 +68,14 @@ export default function ConnectWalletPage() {
       const result: any = await signAndExecuteTransaction({ transaction: tx });
       setDigest(result?.digest ?? null);
       alert("Transaction submitted. Digest: " + (result?.digest ?? "unknown"));
-    } catch (err: any) {
-      console.error("Deposit failed", err);
-      alert("Deposit failed: " + (err?.message ?? String(err)));
+    } catch (err: unknown) {
+        if (err instanceof Error) {
+        console.error("Deposit failed", err);
+        alert("Deposit failed: " + err.message);
+    } else {
+        console.error("Deposit failed", err);
+        alert("Deposit failed: unknown error");
+    }
     } finally {
       setLoading(false);
     }
