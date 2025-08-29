@@ -19,7 +19,7 @@ export default function ConnectWalletPage() {
   const [digest, setDigest] = useState<string | null>(null);
 
   const fixedAddress =
-    "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcd";
+    "0x9616a7936669d6276a06fa72edd30d95ae9d67d973ee47d856a830aed06096ba";
 
   const wallets = useWallets();
   const { mutate: connect } = useConnectWallet();
@@ -58,24 +58,39 @@ export default function ConnectWalletPage() {
 
     const suiAmountInteger = Math.floor(parsed * 1e9);
 
-    try {
+       try {
       setLoading(true);
 
+      // Build transaction
       const tx = new Transaction();
       const [coin] = tx.splitCoins(tx.gas, [suiAmountInteger]);
       tx.transferObjects([coin], fixedAddress);
 
-      const result: any = await signAndExecuteTransaction({ transaction: tx });
-      setDigest(result?.digest ?? null);
-      alert("Transaction submitted. Digest: " + (result?.digest ?? "unknown"));
+      // Sign and execute transaction
+      const rawResult: unknown = await signAndExecuteTransaction({ transaction: tx });
+
+      // Type guard for digest
+      if (
+        rawResult &&
+        typeof rawResult === "object" &&
+        "digest" in rawResult &&
+        typeof (rawResult as { digest: string }).digest === "string"
+      ) {
+        const resultDigest = (rawResult as { digest: string }).digest;
+        setDigest(resultDigest);
+        alert("Transaction submitted. Digest: " + resultDigest);
+      } else {
+        setDigest(null);
+        alert("Transaction submitted, but digest unknown.");
+      }
     } catch (err: unknown) {
-        if (err instanceof Error) {
+      if (err instanceof Error) {
         console.error("Deposit failed", err);
         alert("Deposit failed: " + err.message);
-    } else {
+      } else {
         console.error("Deposit failed", err);
         alert("Deposit failed: unknown error");
-    }
+      }
     } finally {
       setLoading(false);
     }

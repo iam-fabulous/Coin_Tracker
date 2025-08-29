@@ -23,9 +23,9 @@ export default function OnboardingPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // https://clyrafiwallet.onrender.com /api/transactions/deposit
+    // https://clyrafiwallet.onrender.com/api/users/register
     try {
-      const res = await fetch("https://clyrafiwallet.onrender.com/api/users/register", {
+      const res = await fetch("/api/onboarding", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
