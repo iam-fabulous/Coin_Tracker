@@ -3,17 +3,18 @@
 import { useState } from "react";
 
 export default function TransferFiatPage() {
-  const [amount, setAmount] = useState("");
+  const [sender, setSender] = useState("");
   const [recipient, setRecipient] = useState("");
-  const [currency, setCurrency] = useState("USD");
+  const [amount, setAmount] = useState("");
+  // const [currency, setCurrency] = useState("USD");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const res = await fetch("/api/transfer-fiat", {
+    const res = await fetch("https://clyrafiwallet.onrender.com/api/transactions/p2p/deposit", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ amount, recipient, currency }),
+      body: JSON.stringify({ sender, recipient, amount}),
     });
 
     if (res.ok) {
@@ -33,14 +34,28 @@ export default function TransferFiatPage() {
         onSubmit={handleSubmit}
         className="space-y-4 max-w-md bg-gray-100 p-6 rounded-lg shadow"
       >
+
+        {/* Sender */}
+        <div>
+          <label className="block mb-1 text-gray-800">Sender</label>
+          <input
+            type="text"
+            value={sender}
+            onChange={(e) => setRecipient(e.target.value)}
+            placeholder="Enter sender"
+            required
+            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-purple-400 text-gray-500"
+          />
+        </div>
+
         {/* Recipient */}
         <div>
-          <label className="block mb-1 text-gray-800">Recipient ID</label>
+          <label className="block mb-1 text-gray-800">Recipient</label>
           <input
             type="text"
             value={recipient}
             onChange={(e) => setRecipient(e.target.value)}
-            placeholder="Enter recipient ID"
+            placeholder="Enter recipient"
             required
             className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-purple-400 text-gray-500"
           />
@@ -59,7 +74,7 @@ export default function TransferFiatPage() {
           />
         </div>
 
-        {/* Currency */}
+        {/* Currency
         <div>
           <label className="block mb-1 text-gray-800">Currency</label>
           <select
@@ -71,7 +86,7 @@ export default function TransferFiatPage() {
             <option value="NGN">NGN</option>
             <option value="EUR">EUR</option>
           </select>
-        </div>
+        </div> */}
 
         {/* Submit */}
         <button

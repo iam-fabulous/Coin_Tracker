@@ -4,8 +4,9 @@ import { useState } from "react";
 
 export default function TransferCryptoPage() {
   const [form, setForm] = useState({
-    amount: "",
+    sender: "",
     recipient: "",
+    amount: "",
   });
   const [loading, setLoading] = useState(false);
 
@@ -18,7 +19,7 @@ export default function TransferCryptoPage() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/transfer/crypto", {
+      const res = await fetch("https://clyrafiwallet.onrender.com/api/transactions/sui/p2p/deposit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -28,7 +29,7 @@ export default function TransferCryptoPage() {
 
       const data = await res.json();
       alert(`✅ Transfer successful: ${JSON.stringify(data)}`);
-      setForm({ amount: "", recipient: "" }); // reset form
+      setForm({ sender: "", recipient: "", amount: "" }); // reset form
     } catch (err) {
       console.error(err);
       alert("❌ Error processing transfer");
@@ -38,23 +39,24 @@ export default function TransferCryptoPage() {
   };
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen p-8 bg-white">
       {/* Breadcrumb */}
-      <p className="text-sm text-gray-500 mb-4">Transfer / Crypto</p>
+      <p className="text-sm text-black mb-4">Transfer / Crypto</p>
 
       {/* Title */}
-      <h1 className="text-2xl font-bold mb-2">Transfer Crypto</h1>
+      <h1 className="text-2xl font-bold mb-2 text-black">Transfer Crypto</h1>
       <p className="mb-6 text-gray-600">Send crypto to another wallet</p>
 
       {/* Form */}
       <form onSubmit={handleSubmit} className="max-w-md space-y-4">
+
         <input
-          type="number"
-          name="amount"
-          placeholder="Amount"
+          type="text"
+          name="sender"
+          placeholder="Sender"
           value={form.amount}
           onChange={handleChange}
-          className="w-full rounded-lg border p-3 focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="w-full rounded-lg border p-3 focus:outline-none focus:ring-2 focus:ring-purple-500 text-gray-600"
         />
 
         <input
@@ -63,7 +65,16 @@ export default function TransferCryptoPage() {
           placeholder="Recipient"
           value={form.recipient}
           onChange={handleChange}
-          className="w-full rounded-lg border p-3 focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="w-full rounded-lg border p-3 focus:outline-none focus:ring-2 focus:ring-purple-500 text-gray-600"
+        />
+
+        <input
+          type="number"
+          name="amount"
+          placeholder="Amount"
+          value={form.amount}
+          onChange={handleChange}
+          className="w-full rounded-lg border p-3 focus:outline-none focus:ring-2 focus:ring-purple-500 text-gray-600"
         />
 
         <button
@@ -71,7 +82,7 @@ export default function TransferCryptoPage() {
           disabled={loading}
           className="rounded-lg bg-purple-600 px-6 py-2 font-semibold text-white hover:bg-purple-700 disabled:opacity-50"
         >
-          {loading ? "Processing..." : "Continue"}
+          {loading ? "Processing..." : "Transfer"}
         </button>
       </form>
     </div>

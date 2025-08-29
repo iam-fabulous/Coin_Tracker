@@ -24,7 +24,7 @@ export default function CreditWalletPage() {
         router.push("/credit/card");
         break;
       case "bank":
-        router.push("/credit/bank");
+        router.push("https://clyrafiwallet.onrender.com/api/transactions/deposit");
         break;
       case "onramp":
         router.push("/credit/onramp");
@@ -104,48 +104,63 @@ export default function CreditWalletPage() {
             </span>
           </div>
 
-          {/* External Wallet */}
-          <div
-            onClick={() => setSelectedMethod("")}
-            className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition ${
-              selectedMethod === "wallet"
-                ? "border-purple-600 bg-purple-50"
-                : "border-gray-300 bg-white"
-            }`}
-          >
-            <span className="font-medium">External Wallet Address</span>
-            <button
-              className="px-3 py-1 text-sm bg-purple-700 text-white rounded-lg"
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowWalletDetails(true); // show wallet info below
-              }}
+            {/* External Wallet */}
+            <div
+              onClick={() => setSelectedMethod("wallet")}
+              className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition ${
+                selectedMethod === "wallet"
+                  ? "border-purple-600 bg-purple-50"
+                  : "border-gray-300 bg-white"
+              }`}
             >
-              Connect Wallet
-            </button>
-          </div>
+              <span className="font-medium">External Wallet</span>
 
-          {/* Wallet Details (only visible when Connect Wallet is clicked) */}
-          {showWalletDetails && (
-            <div className="p-4 rounded-xl border bg-gray-50 space-y-3">
-              {/* Wallet Address + Copy Button */}
-              <div className="flex items-center justify-between">
-                <span className="font-mono text-[9px]">{walletAddress}</span>
+              <div className="flex gap-2">
+                {/* View Address Button */}
                 <button
-                  onClick={copyToClipboard}
-                  className="px-3 py-1 text-xs bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+                  className="px-3 py-1 text-sm bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowWalletDetails((prev) => !prev); // toggle address view
+                  }}
                 >
-                  Copy
+                  View Address
+                </button>
+
+                {/* Connect Wallet Button (routes to another page) */}
+                <button
+                  className="px-3 py-1 text-sm bg-purple-700 text-white rounded-lg hover:bg-purple-800"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    router.push("/connect-wallet"); // navigate to wallet connection page
+                  }}
+                >
+                  Connect Wallet
                 </button>
               </div>
-
-              {/* Instructions */}
-              <p className="text-xs text-gray-600">
-                Copy the wallet address above and deposit your funds to complete
-                the transaction.
-              </p>
             </div>
-          )}
+
+            {/* Wallet Details (only visible when View Address is clicked) */}
+            {showWalletDetails && (
+              <div className="p-4 rounded-xl border bg-gray-50 space-y-3">
+                {/* Wallet Address + Copy Button */}
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-[10px]">{walletAddress}</span>
+                  <button
+                    onClick={copyToClipboard}
+                    className="px-3 py-1 text-xs bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+                  >
+                    Copy
+                  </button>
+                </div>
+
+                {/* Instructions */}
+                <p className="text-xs text-gray-600">
+                  Copy the wallet address above and deposit your funds to complete the transaction.
+                </p>
+              </div>
+            )}
+
         </div>
 
         {/* Continue Button */}

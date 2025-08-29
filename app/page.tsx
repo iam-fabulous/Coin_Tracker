@@ -25,7 +25,7 @@ export default function OnboardingPage() {
     e.preventDefault();
     // https://clyrafiwallet.onrender.com /api/transactions/deposit
     try {
-      const res = await fetch("/api/onboarding", {
+      const res = await fetch("https://clyrafiwallet.onrender.com/api/users/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
