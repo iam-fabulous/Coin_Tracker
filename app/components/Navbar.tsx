@@ -9,7 +9,7 @@ export default function Navbar() {
   return (
     <nav className="w-full border-b bg-white px-6 py-4 flex items-center justify-between">
       {/* Logo */}
-      <div className="font-bold text-lg text-gray-900">CoinTracker</div>
+      <div className="font-bold text-lg text-gray-900">Meedl</div>
 
       {/* Desktop Menu */}
       <div className="hidden md:flex items-center space-x-6 text-gray-700 font-medium">

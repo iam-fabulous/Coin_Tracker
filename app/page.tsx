@@ -21,6 +21,8 @@ export default function OnboardingPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+   
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // https://clyrafiwallet.onrender.com/api/users/register
@@ -35,7 +37,8 @@ export default function OnboardingPage() {
 
       const data = await res.json();
       localStorage.setItem("dashboardData", JSON.stringify(data));
-      alert(`Success: ${JSON.stringify(data)}`);
+      console.log(data);
+      alert(`Success: ${data?.message}`);
       router.push("/dashboard");
     } catch (err) {
       console.error(err);
@@ -43,11 +46,13 @@ export default function OnboardingPage() {
     }
   };
 
+  
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50">
       <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
         <h1 className="mb-6 text-center text-2xl font-bold text-black">
-          Welcome to CoinTracker
+          Welcome to Meedl
         </h1>
 
         <form className="space-y-4" onSubmit={handleSubmit}>
@@ -109,7 +114,7 @@ export default function OnboardingPage() {
 
           <button
             type="submit"
-            className="w-full rounded-lg bg-purple-600 py-3 font-semibold text-white hover:bg-purple-700"
+            className={`w-full rounded-lg bg-purple-600 py-3 font-semibold text-white hover:bg-purple-700`}
             // onClick={() => router.push("/dashboard")}
           >
             Continue
