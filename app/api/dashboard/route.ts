@@ -4,13 +4,13 @@ import { NextResponse } from "next/server";
 const mockDashboardData = {
   userId: "user_123",
   fiatBalance: 1234.56,
-  cryptoBalance: 7890.12,
+  cryptoBalance: 50.00,
   transactions: [
     {
       id: "txn_1",
       date: "2025-08-20",
       type: "Deposit",
-      amount: "$500.00",
+      amount: "50.00 SUI",
       status: "Completed",
     },
     {

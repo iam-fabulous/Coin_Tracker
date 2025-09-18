@@ -42,11 +42,25 @@ export default function DashboardPage() {
     async function init() {
       try {
         // ✅ Load onboarding data
-        const stored = localStorage.getItem("onboardingData");
+        const stored = localStorage.getItem("userData");
         if (stored) {
           const parsed = JSON.parse(stored);
-          setOnboarding(parsed);
+          // ✅ Normalize nested user object into flat structure
+          const normalized: OnboardingData = {
+            fullName: parsed.user.fullName,
+            email: parsed.user.email,
+            phoneNumber: parsed.user.phoneNumber,
+            userId: parsed.user.userId ?? "", // in case it's missing
+            message: parsed.message,
+            orgId: parsed.user.organizationId,
+            businessName: parsed.user.businessName ?? "",
+            apiPublicKey: parsed.apiPublicKey ?? "",
+            apiSecret: parsed.apiSecret ?? "",
+            apiKeyType: parsed.apiKeyType ?? "",
+            kybStatus: parsed.kybStatus ?? "",
+          };
 
+          setOnboarding(normalized);
           // ✅ Show popup if just registered
           if (parsed.message === "Registered successfully") {
             alert("Registered successfully 🎉");
@@ -103,9 +117,9 @@ export default function DashboardPage() {
               </h2>
             </div>
             <div className="bg-gray-200 p-4 rounded-lg">
-              <p className="text-gray-800">Crypto Balance</p>
+              <p className="text-gray-800">Crypto Balance(SUI)</p>
               <h2 className="text-xl font-semibold text-black">
-                ${dashboard.cryptoBalance.toLocaleString()}
+                {dashboard.cryptoBalance.toLocaleString()} SUI
               </h2>
             </div>
           </div>
