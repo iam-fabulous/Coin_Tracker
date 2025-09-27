@@ -10,6 +10,7 @@ import {
   useSignAndExecuteTransaction,
 } from "@mysten/dapp-kit";
 import { Transaction } from "@mysten/sui/transactions";
+import { addLedgerEntry } from "../lib/ledger";
 
 interface WalletData {
   username: string;
@@ -20,7 +21,7 @@ export default function WalletDeposit() {
   const router = useRouter();
   // const [dashboardData, setUserName] =useState<dashboardData>({ })
   const [walletData, setWalletData] = useState<WalletData>({ username: "", amount: "" });
-  const [companyName, setCompanyName] = useState("Clyra-Fi");
+  const [company_name,setName] = useState("");
   // const [copied, setCopied] = useState(false);
   const [digest, setDigest] = useState<string | null>(null);
 
@@ -36,7 +37,7 @@ export default function WalletDeposit() {
     // Get data from localStorage
     // const storedUserName = localStorage.getItem("dashboardData")
     const storedWalletData = localStorage.getItem("walletData");
-    const storedCompanyName = localStorage.getItem("companyName") || "Meedl";
+    
     
     if (storedWalletData) {
       try {
@@ -46,9 +47,15 @@ export default function WalletDeposit() {
       }
     }
     
-    setCompanyName(storedCompanyName);
+    // setCompanyName(storedCompanyName);
     // setUserName(storedUserName);
   }, []);
+
+  useEffect(() => {
+  const company_name = localStorage.getItem("company");
+  console.log("Retrieved company_name from localStorage:", company_name);
+   setName(company_name || "")
+  },[setName])
 
   // const copyToClipboard = async () => {
   //   await navigator.clipboard.writeText(fixedAddress);
@@ -108,6 +115,30 @@ export default function WalletDeposit() {
         const resultDigest = (rawResult as { digest: string }).digest;
         setDigest(resultDigest);
         alert("Transaction submitted. Digest: " + resultDigest);
+      
+        // Add entry to backup ledger after successful transaction
+        try {
+          const currentTimestamp = Date.now();
+          const ledgerResult = await addLedgerEntry({
+            company_name: company_name,
+            username: walletData.username,
+            amount: suiAmountInteger, // Store in MIST (smallest unit)
+            transaction_type: "deposit",
+            transaction_address: currentAccount.address, // Use connected wallet address
+            status: "completed",
+            date: currentTimestamp,
+          });
+
+          if (ledgerResult.success) {
+            console.log("Successfully added entry to backup ledger:", ledgerResult.transactionDigest);
+          } else {
+            console.error("Failed to add entry to backup ledger:", ledgerResult.error);
+          }
+        } catch (ledgerError) {
+          console.error("Error adding to backup ledger:", ledgerError);
+          // Don't show error to user as main transaction was successful
+        }
+
       } else {
         setDigest(null);
         alert("Transaction submitted, but digest unknown.");
@@ -120,11 +151,12 @@ export default function WalletDeposit() {
         console.error("Deposit failed", err);
         alert("Deposit failed: unknown error");
       }
-    }
+    } //router.push("/dashboard");
   };
 
   const handleBack = () => {
-    router.back();
+    //router.back();
+    router.push("/dashboard");
   };
 
   return (
@@ -150,7 +182,7 @@ export default function WalletDeposit() {
                 </svg>
                 Company:
               </span>
-              <span className="font-semibold text-blue-300">{companyName}</span>
+              <span className="font-semibold text-blue-300">{company_name}</span>
             </div>
             <div className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-700/50 transition-colors">
               <span className="text-sm text-gray-400 flex items-center">
@@ -234,7 +266,7 @@ export default function WalletDeposit() {
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
             </svg>
-            Back
+            Goto dashboard
           </button>
         </div>
 

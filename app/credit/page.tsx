@@ -17,10 +17,10 @@ export default function CreditWalletPage() {
     "0x9616a7936669d6276a06fa72edd30d95ae9d67d973ee47d856a830aed06096ba"; // mock wallet address
   const router = useRouter();
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(walletAddress);
-    alert("Wallet address copied ✅");
-  };
+  // const copyToClipboard = () => {
+  //   navigator.clipboard.writeText(walletAddress);
+  //   alert("Wallet address copied ✅");
+  // };
 
   const handleBankFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setBankForm({ ...bankForm, [e.target.name]: e.target.value });

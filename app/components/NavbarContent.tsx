@@ -12,6 +12,7 @@ export default function Navbar() {
 
   useEffect(() => {
     localStorage.setItem("company_name", setName)
+    console.log("Stored company_name in localStorage:", setName);
   },[setName])
 
    const [name,setCompanyName] = useState("")

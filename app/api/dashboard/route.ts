@@ -3,8 +3,8 @@ import { NextResponse } from "next/server";
 // Mock data – in production you'd fetch from your DB
 const mockDashboardData = {
   userId: "user_123",
-  fiatBalance: 1234.56,
-  cryptoBalance: 50.00,
+  fiatBalance: 0.00,
+  cryptoBalance: 0.00,
   transactions: [
     {
       id: "txn_1",
